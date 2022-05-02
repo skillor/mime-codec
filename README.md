@@ -1,3 +1,5 @@
 # - Mime Codec -
 
-### get mime codecs specified by https://developer.mozilla.org/en-US/docs/Web/Media/Formats/codecs_parameter
+### get mime codecs specified by [Media Codecs](https://developer.mozilla.org/en-US/docs/Web/Media/Formats/codecs_parameter)
+
+[![Build Status](https://github.com/skillor/mime-codec/actions/workflows/test-python.yml/badge.svg)](https://github.com/skillor/mime-codec/actions/workflows/test-python.yml) [![PyPi version](https://badgen.net/pypi/v/Mime-Codec/)](https://pypi.org/project/Mime-Codec)
