@@ -18,7 +18,7 @@ def get_probe(file_path: str) -> Dict:
     return ffmpeg.probe(file_path, cmd=os.path.join(current_dir, 'binaries', 'ffprobe'))
 
 
-def get_mime_type(file_path: str, fallback: str = 'video/mp4'):
+def get_mime_type(file_path: str, fallback: str = None):
     mime_type = mimetypes.guess_type(file_path)[0]
     if mime_type is None:
         mime_type = fallback
