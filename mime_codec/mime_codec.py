@@ -47,8 +47,9 @@ def get_codecs(file_path: str, mime_type: str = None):
     return list(map(lambda x: get_codec(x, mime_type), get_probe(file_path)['streams']))
 
 
-def get_mime_codec(file_path: str):
-    mime_type = get_mime_type(file_path)
+def get_mime_codec(file_path: str, mime_type: str = None):
+    if mime_type is None:
+        mime_type = get_mime_type(file_path)
     if mime_type == 'audio/mpeg':
         return 'audio/mpeg'
 
