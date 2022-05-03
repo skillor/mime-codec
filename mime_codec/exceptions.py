@@ -1,2 +1,7 @@
-class CodecException(Exception):
+class CodecNotSupportedException(Exception):
     pass
+
+
+class MimeTypeNotSupportedException(Exception):
+    pass
+

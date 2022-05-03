@@ -17,7 +17,7 @@ def main():
                 p = os.path.join(dp, f)
                 try:
                     print('{}: {}'.format(p, get_mime_codec(p)))
-                except:
+                except MimeTypeNotSupportedException:
                     pass
         return
     print(get_mime_codec(args.path))

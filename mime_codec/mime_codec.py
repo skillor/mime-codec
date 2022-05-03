@@ -5,7 +5,7 @@ from typing import Dict
 import ffmpeg
 
 from .profiles_avc import get_avc_profile
-from .exceptions import CodecException
+from .exceptions import CodecNotSupportedException, MimeTypeNotSupportedException
 from .profiles_mp4a import get_mp4a_profile
 from .webm_mime_types import WEBM_MIME_TYPES
 
@@ -38,7 +38,7 @@ def get_codec(probe_stream: Dict, mime_type: str):
     if probe_stream['codec_tag_string'] == 'mp4a':
         return 'mp4a.40.{}'.format(get_mp4a_profile(probe_stream['profile']))
 
-    raise CodecException('Codec not found', probe_stream)
+    raise CodecNotSupportedException('Codec not found', probe_stream)
 
 
 def get_codecs(file_path: str, mime_type: str = None):
@@ -51,6 +51,9 @@ def get_mime_codec(file_path: str):
     mime_type = get_mime_type(file_path)
     if mime_type == 'audio/mpeg':
         return 'audio/mpeg'
+
+    if not (mime_type.startswith('audio') or mime_type.startswith('video')):
+        raise MimeTypeNotSupportedException()
 
     codecs = get_codecs(file_path)
 
