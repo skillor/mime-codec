@@ -49,6 +49,9 @@ def get_codecs(file_path: str, mime_type: str = None):
 
 def get_mime_codec(file_path: str):
     mime_type = get_mime_type(file_path)
+    if mime_type == 'audio/mpeg':
+        return 'audio/mpeg'
+
     codecs = get_codecs(file_path)
 
     return '{0}; codecs="{1}"'.format(mime_type, ','.join(codecs))
