@@ -1,5 +1,6 @@
 import mimetypes
-import ffmpeg
+from ffprobe import FFProbe
+from ffprobe.ffprobe import FFStream
 
 from .profiles_avc import get_avc_profile
 from .exceptions import CodecException
@@ -14,18 +15,18 @@ def get_mime_type(file_path: str, fallback: str = 'video/mp4'):
     return mime_type
 
 
-def get_codec(probe_stream, mime_type: str):
+def get_codec(probe_stream: FFStream, mime_type: str):
     if mime_type in WEBM_MIME_TYPES:
-        return probe_stream['codec_name']
+        return probe_stream.codec()
 
-    if probe_stream['codec_tag_string'] == 'avc1':
-        level = probe_stream['level']
+    if probe_stream.__dict__['codec_tag_string'] == 'avc1':
+        level = probe_stream.__dict__['level']
         level = f'{int(level):02x}'
-        number, constraint = get_avc_profile(probe_stream['profile'])
+        number, constraint = get_avc_profile(probe_stream.__dict__['profile'])
         return 'avc1.{}{}{}'.format(number, constraint, level).lower()
 
-    if probe_stream['codec_tag_string'] == 'mp4a':
-        return 'mp4a.40.{}'.format(get_mp4a_profile(probe_stream['profile']))
+    if probe_stream.__dict__['codec_tag_string'] == 'mp4a':
+        return 'mp4a.40.{}'.format(get_mp4a_profile(probe_stream.__dict__['profile']))
 
     raise CodecException('Codec not found', probe_stream)
 
@@ -33,8 +34,8 @@ def get_codec(probe_stream, mime_type: str):
 def get_codecs(file_path: str, mime_type: str = None):
     if mime_type is None:
         mime_type = get_mime_type(file_path)
-    probe = ffmpeg.probe(file_path)
-    return list(map(lambda x: get_codec(x, mime_type), probe['streams']))
+    metadata = FFProbe(file_path)
+    return list(map(lambda x: get_codec(x, mime_type), metadata.streams))
 
 
 def get_mime_codec(file_path: str):
