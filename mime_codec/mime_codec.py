@@ -1,10 +1,21 @@
 import mimetypes
+import os
+from typing import Dict
+
 import ffmpeg
 
 from .profiles_avc import get_avc_profile
 from .exceptions import CodecException
 from .profiles_mp4a import get_mp4a_profile
 from .webm_mime_types import WEBM_MIME_TYPES
+
+current_dir = os.path.dirname(os.path.realpath(__file__))
+
+
+def get_probe(file_path: str) -> Dict:
+    if os.name == 'nt':
+        return ffmpeg.probe(file_path, cmd=os.path.join(current_dir, 'binaries', 'ffprobe.exe'))
+    return ffmpeg.probe(file_path, cmd=os.path.join(current_dir, 'binaries', 'ffprobe'))
 
 
 def get_mime_type(file_path: str, fallback: str = 'video/mp4'):
@@ -14,7 +25,7 @@ def get_mime_type(file_path: str, fallback: str = 'video/mp4'):
     return mime_type
 
 
-def get_codec(probe_stream, mime_type: str):
+def get_codec(probe_stream: Dict, mime_type: str):
     if mime_type in WEBM_MIME_TYPES:
         return probe_stream['codec_name']
 
@@ -33,8 +44,7 @@ def get_codec(probe_stream, mime_type: str):
 def get_codecs(file_path: str, mime_type: str = None):
     if mime_type is None:
         mime_type = get_mime_type(file_path)
-    probe = ffmpeg.probe(file_path)
-    return list(map(lambda x: get_codec(x, mime_type), probe['streams']))
+    return list(map(lambda x: get_codec(x, mime_type), get_probe(file_path)['streams']))
 
 
 def get_mime_codec(file_path: str):

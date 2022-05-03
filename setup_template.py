@@ -24,5 +24,10 @@ setup(name='Mime Codec',
                    'Topic :: Internet'],
       setup_requires=["wheel"],
       install_requires=requirements,
+      include_package_data=True,
+      package_data={'': [
+          'binaries/ffprobe',
+          'binaries/ffprobe.exe',
+      ]},
       python_requires='>=3',
       )
