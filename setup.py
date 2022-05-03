@@ -10,7 +10,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(name='Mime Codec',
       packages=['mime_codec'],
-      version='0.0.1',
+      version='0.1.1',
       description='get mime codecs for media purposes',
       author='skillor',
       author_email='skillor@gmx.net',
@@ -24,5 +24,10 @@ setup(name='Mime Codec',
                    'Topic :: Internet'],
       setup_requires=["wheel"],
       install_requires=requirements,
+      include_package_data=True,
+      package_data={'': [
+          'binaries/ffprobe',
+          'binaries/ffprobe.exe',
+      ]},
       python_requires='>=3',
       )
